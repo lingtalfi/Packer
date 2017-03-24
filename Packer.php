@@ -6,6 +6,7 @@ namespace Packer;
 
 use DirScanner\YorgDirScannerTool;
 use TokenFun\TokenFinder\Tool\TokenFinderTool;
+use TokenFun\Tool\TokenTool;
 
 /**
  * Note: this is a simple naive packer,
@@ -107,14 +108,38 @@ class Packer
 
             $namespace = str_replace('/', '\\', $namespace);
             $s .= 'namespace ' . $namespace . ' {' . PHP_EOL;
+            $allUseDeps = [];
             foreach ($files as $file) {
 
                 $file = $rootDirectory . "/$file.php";
 
 
+                /**
+                 * get rid of namespaces
+                 */
                 $c = file_get_contents($file);
                 $c = preg_replace('!namespace.*!', '', $c);
                 $c = trim($c);
+
+
+                /**
+                 * be sure that two use identical statements
+                 * are not written in the same namespace context
+                 */
+                $tokens = token_get_all($c);
+                $useDeps = TokenFinderTool::getUseDependencies($tokens);
+                if (count($useDeps) > 0) {
+                    $replaced = false; // just for debug purposes
+                    foreach ($useDeps as $dep) {
+                        if (in_array($dep, $allUseDeps, true)) {
+                            $replaced = true;
+                            $c = preg_replace('!use\s+' . str_replace('\\','\\\\',$dep) . '\s*;!', '', $c);
+                        }
+                    }
+                    $allUseDeps = array_merge($allUseDeps, $useDeps);
+                }
+
+
                 if ('<?php' === substr($c, 0, 5)) {
                     $c = substr($c, 5);
                 }
