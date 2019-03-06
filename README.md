@@ -16,7 +16,7 @@ How to install?
 Using the [universe naive importer](https://github.com/lingtalfi/universe-naive-importer):
 
 ```bash
-uni import Packer
+uni import Ling/Packer
 ```
 
 
@@ -37,7 +37,7 @@ Example
 <?php
 
 
-use Packer\Packer;
+use Ling\Packer\Packer;
 
 require_once __DIR__ . "/../boot.php";
 

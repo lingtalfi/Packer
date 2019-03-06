@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Packer;
+namespace Ling\Packer;
 
 
-use DirScanner\YorgDirScannerTool;
-use TokenFun\TokenFinder\Tool\TokenFinderTool;
-use TokenFun\Tool\TokenTool;
+use Ling\DirScanner\YorgDirScannerTool;
+use Ling\TokenFun\TokenFinder\Tool\TokenFinderTool;
+use Ling\TokenFun\Tool\TokenTool;
 
 /**
  * Note: this is a simple naive packer,
